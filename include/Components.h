@@ -2,6 +2,7 @@
 
 #include "Vec2.h"
 #include <SFML/Graphics.hpp>
+#include <string>
 
 class CTransform
 {
@@ -27,7 +28,7 @@ class CShape
             circle.setFillColor(fill);
             circle.setOutlineColor(outline);
             circle.setOutlineThickness(thickness);
-            circle.setOrigin(radius, points);
+            circle.setOrigin(radius, radius);
         }
 };
 
@@ -66,4 +67,14 @@ class CInput
         bool shoot = false;
 
         CInput() {}
+};
+
+class CText
+{
+    public:
+        sf::Text text;
+
+        CText(std::string str, sf::Font& f, int s) {
+            text = sf::Text(str, f, s);
+        }
 };

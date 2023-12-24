@@ -5,7 +5,8 @@
 - DearImGui 1.90
 - ImGui-SFML 2.6
 
-**This game must have the following features:**
+This game must have the following features:
+**Player:**
 - The player is represented by a shape which is defined in the config file
 - The player must spawn in the center of the screen at the begining of the game,
   and after it dies (collides with an enemy)
@@ -43,7 +44,8 @@
   color of the origin enemy. These small entities travel outward at angles at a
   fixed intervals equal to (360 / verticies).
   For example, if the original enemy has 6 sides, the 6 smaller enemies will 
-  travel outward in intervals of (360 / 6) = 60 degrees.
+  travel outward in intervals of (360 / 6) = 60 degrees. The smaller enemies 
+  must have a radius equal to half of the original entity.
 
 **Score:**
 - Each time an enemy spawns, it is given a score component of N * 100, where N 
