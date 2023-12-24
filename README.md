@@ -5,7 +5,11 @@
 - DearImGui 1.90
 - ImGui-SFML 2.6
 
-This game must have the following features:
+DEMO
+
+[![Watch the video](https://img.youtube.com/vi/19MgmLUtSik/hqdefault.jpg)](https://www.youtube.com/embed/19MgmLUtSik)
+
+This game must have the following features:<br>
 **Player:**
 - The player is represented by a shape which is defined in the config file
 - The player must spawn in the center of the screen at the begining of the game,
