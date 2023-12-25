@@ -22,6 +22,7 @@ class Entity
         std::shared_ptr<CScore> cScore;
         std::shared_ptr<CLifespan> cLifespan;
         std::shared_ptr<CText> cText;
+        std::shared_ptr<CCdMeter> cCdMeter;
 
         bool isActive() const;
         const std::string& tag() const;

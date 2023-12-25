@@ -1,5 +1,6 @@
 #pragma once
 
+#include "SFML/Graphics/RectangleShape.hpp"
 #include "Vec2.h"
 #include <SFML/Graphics.hpp>
 #include <string>
@@ -76,5 +77,21 @@ class CText
 
         CText(std::string str, sf::Font& f, int s) {
             text = sf::Text(str, f, s);
+        }
+};
+
+class CCdMeter {
+    public:
+        float barLen;
+        float remainTime;
+        Vec2 offset;
+        sf::Clock clock;
+        sf::RectangleShape rectangle;
+
+        CCdMeter(float w, float h, Vec2 o, float s)
+        : barLen(w), remainTime(s), offset(o) {
+            rectangle = sf::RectangleShape(sf::Vector2(w, h));
+            rectangle.setFillColor(sf::Color(255, 255, 200, 220));
+            clock.restart();
         }
 };

@@ -151,6 +151,7 @@ void Game::run() {
             sGUI();
         }
 
+        sCoolDownTimer();
         sRender();
     }
 }
@@ -285,7 +286,46 @@ void Game::spawnBullet(std::shared_ptr<Entity> entity, const Vec2& target) {
 }
 
 void Game::spawnSpecialWeapon(std::shared_ptr<Entity> entity) {
-    // todo: implement your own special weapon
+    // implement your own special weapon
+    // spawn radial bullets has cool down timer
+    int n = entity->cShape->circle.getPointCount();
+    float speed = m_bulletConfig.S;
+    sf::Vector2f center = entity->cShape->circle.getOrigin();
+    for (int i=0; i<n; i++) {
+        sf::Vector2f vertex = entity->cShape->circle.getPoint(i);
+        float theta = std::atan2(vertex.y - center.y, vertex.x - center.x);
+        Vec2 velocity = Vec2(
+            speed * std::cos(theta), speed * std::sin(theta)
+        );
+        auto bullet = m_entities.addEntity("bullet");
+        bullet->cTransform = std::make_shared<CTransform>(
+            entity->cTransform->pos, velocity, 0
+        );
+        bullet->cShape = std::make_shared<CShape>(
+            m_bulletConfig.SR,
+            n,
+            sf::Color(m_bulletConfig.FR, m_bulletConfig.FG, m_bulletConfig.FB),
+            sf::Color(m_bulletConfig.OR, m_bulletConfig.OG, m_bulletConfig.OB),
+            m_bulletConfig.OT 
+        );
+        bullet->cCollission = std::make_shared<CCollision>(m_bulletConfig.CR);
+        bullet->cLifespan = std::make_shared<CLifespan>(m_bulletConfig.L);
+    }
+
+    // spawn cool down meter 5 seconds
+    auto cdMeter = m_entities.addEntity("cdMeter");
+    float w = entity->cShape->circle.getLocalBounds().getSize().x;
+    float h = entity->cShape->circle.getLocalBounds().getSize().y * 0.15;
+    Vec2 offset = Vec2(
+        entity->cShape->circle.getRadius(),
+        entity->cShape->circle.getRadius() + h * 1.8
+    );
+    cdMeter->cTransform = std::make_shared<CTransform>(
+        entity->cTransform->pos - offset,
+        Vec2(0, 0),
+        0
+    );
+    cdMeter->cCdMeter = std::make_shared<CCdMeter>(w, h, offset, 5);
 }
 
 void Game::sMovement() {
@@ -639,6 +679,17 @@ void Game::sRender() {
                 m_window.draw(e->cText->text);
             }
         }
+
+        if (e->cCdMeter) {
+            e->cCdMeter->rectangle.setPosition(
+                m_player->cTransform->pos.x - e->cCdMeter->offset.x,
+                m_player->cTransform->pos.y - e->cCdMeter->offset.y
+            );
+
+            if (m_rendering) {
+                m_window.draw(e->cCdMeter->rectangle);
+            }
+        }
     }
 
     // draw score board
@@ -777,6 +828,10 @@ void Game::sUserInput() {
                 //     << event.mouseButton.x << ","
                 //     << event.mouseButton.y << ")\n";
                 // call spawnSpecialWeapon here
+                if (m_specialWeapon) {
+                    m_specialWeapon = false;
+                    spawnSpecialWeapon(m_player);
+                }
             }
         }
     }
@@ -804,4 +859,20 @@ void Game::spawnAddScore(int score, Vec2 position) {
     s->cText = std::make_shared<CText>("+" + std::to_string(score), m_font, 20);
     s->cText->text.setFillColor(sf::Color::White);
     s->cLifespan = std::make_shared<CLifespan>(30);
+}
+
+void Game::sCoolDownTimer() {
+    for(auto e : m_entities.getEntities("cdMeter")) {
+        float elapsed = e->cCdMeter->clock.getElapsedTime().asSeconds();
+        if (elapsed < e->cCdMeter->remainTime) {
+            float length = e->cCdMeter->barLen * 
+                (1.0 - elapsed / e->cCdMeter->remainTime);
+            float height = e->cCdMeter->rectangle.getSize().y;
+            e->cCdMeter->rectangle.setSize(sf::Vector2f(length, height));
+        }
+        else {
+            m_specialWeapon = true;
+            e->destroy();
+        }
+    }
 }

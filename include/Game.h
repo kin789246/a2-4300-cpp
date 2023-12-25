@@ -21,6 +21,7 @@ class Game
     EnemyConfig m_enemyConfig;
     BulletConfig m_bulletConfig;
     sf::Clock m_deltaClock;
+    sf::Clock m_cdClock;
     int m_score = 0;
     int m_currentFrame = 0;
     int m_lastEnemySpawnTime = 0; 
@@ -32,6 +33,7 @@ class Game
     bool m_spawning = true;
     bool m_gui = true;
     bool m_rendering = true;
+    bool m_specialWeapon = true;
 
     std::shared_ptr<Entity> m_player;
 
@@ -45,6 +47,7 @@ class Game
     void sEnemySpawner();
     void sCollision();
     void sGUI();
+    void sCoolDownTimer();
 
     void spawnPlayer();
     void spawnEnemy();
