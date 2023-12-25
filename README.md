@@ -7,6 +7,9 @@
 
 DEMO
 
+
+https://github.com/kin789246/a2-4300-cpp/assets/30062348/058c1a8b-4b6a-483d-b1bb-4482929a3d77
+
 [![Watch the video](https://img.youtube.com/vi/19MgmLUtSik/hqdefault.jpg)](https://www.youtube.com/embed/19MgmLUtSik)
 
 This game must have the following features:<br>
